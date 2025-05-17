@@ -1,123 +1,184 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link } from 'expo-router';
-import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { theme } from '../constants/theme';
-import { useTheme } from '../context/ThemeContext';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { colors } from '../../constants/colors';
 
 export default function ProfileScreen() {
-  const { isDarkMode } = useTheme();
-  const colors = isDarkMode ? theme.dark : theme.light;
-
-  // TODO: Replace with actual user data
-  const userData = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    measurements: {
-      height: '180',
-      weight: '75',
-      chest: '100',
-      waist: '82',
-      hips: '98',
-      inseam: '82',
-      shoeSize: '43',
-    },
-  };
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-      padding: theme.spacing.md,
-    },
-    header: {
-      alignItems: 'center',
-      marginBottom: theme.spacing.xl,
-    },
-    avatar: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
-      backgroundColor: colors.card,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: theme.spacing.md,
-    },
-    name: {
-      ...theme.typography.h2,
-      color: colors.text,
-      marginBottom: theme.spacing.xs,
-    },
-    email: {
-      ...theme.typography.body,
-      color: colors.text,
-      marginBottom: theme.spacing.lg,
-    },
-    section: {
-      backgroundColor: colors.card,
-      borderRadius: theme.borderRadius.md,
-      padding: theme.spacing.md,
-      marginBottom: theme.spacing.md,
-    },
-    sectionTitle: {
-      ...theme.typography.h3,
-      color: colors.text,
-      marginBottom: theme.spacing.md,
-    },
-    measurementRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: theme.spacing.sm,
-    },
-    measurementLabel: {
-      ...theme.typography.body,
-      color: colors.text,
-    },
-    measurementValue: {
-      ...theme.typography.body,
-      color: colors.primary,
-      fontWeight: 'bold',
-    },
-    button: {
-      backgroundColor: colors.primary,
-      padding: theme.spacing.md,
-      borderRadius: theme.borderRadius.md,
-      alignItems: 'center',
-      marginTop: theme.spacing.md,
-    },
-    buttonText: {
-      color: colors.buttonText,
-      ...theme.typography.accent,
-    },
-  });
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.avatar}>
-          <FontAwesome name="user" size={50} color={colors.text} />
-        </View>
-        <Text style={styles.name}>{userData.name}</Text>
-        <Text style={styles.email}>{userData.email}</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Body Measurements</Text>
-        {Object.entries(userData.measurements).map(([key, value]) => (
-          <View key={key} style={styles.measurementRow}>
-            <Text style={styles.measurementLabel}>
-              {key.charAt(0).toUpperCase() + key.slice(1)}
-            </Text>
-            <Text style={styles.measurementValue}>{value} {key === 'shoeSize' ? 'EU' : 'cm'}</Text>
+    <View style={styles.container}>
+      <LinearGradient
+        colors={[
+          isDark ? colors.dark.surface : colors.light.surface,
+          isDark ? colors.dark.background : colors.light.background,
+        ]}
+        style={styles.gradient}
+      >
+        <View style={styles.header}>
+          <View style={styles.profileImageContainer}>
+            <View style={styles.avatarContainer}>
+              <Ionicons 
+                name="person" 
+                size={60} 
+                color={isDark ? colors.textLight : colors.textDark} 
+              />
+            </View>
+            <TouchableOpacity style={styles.editButton}>
+              <Ionicons name="camera" size={20} color={colors.textLight} />
+            </TouchableOpacity>
           </View>
-        ))}
+          <Text style={[styles.name, { color: isDark ? colors.textLight : colors.textDark }]}>
+            John Doe
+          </Text>
+          <Text style={[styles.bio, { color: isDark ? colors.textLight : colors.textDark }]}>
+            Fitness Enthusiast
+          </Text>
+        </View>
 
-        <Link href="/profile/setup" asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Update Measurements</Text>
-          </TouchableOpacity>
-        </Link>
-      </View>
-    </ScrollView>
+        <View style={styles.statsContainer}>
+          {[
+            { label: 'Workouts', value: '24' },
+            { label: 'Following', value: '210' },
+            { label: 'Followers', value: '158' },
+          ].map((stat) => (
+            <View key={stat.label} style={styles.statItem}>
+              <Text style={[styles.statValue, { color: isDark ? colors.textLight : colors.textDark }]}>
+                {stat.value}
+              </Text>
+              <Text style={[styles.statLabel, { color: isDark ? colors.accent3 : colors.accent3 }]}>
+                {stat.label}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.menuContainer}>
+          {[
+            { icon: 'settings-outline', label: 'Settings' },
+            { icon: 'bookmark-outline', label: 'Saved' },
+            { icon: 'notifications-outline', label: 'Notifications' },
+            { icon: 'help-circle-outline', label: 'Help' },
+          ].map((item) => (
+            <TouchableOpacity key={item.label} style={styles.menuItem}>
+              <Ionicons 
+                name={item.icon} 
+                size={24} 
+                color={isDark ? colors.textLight : colors.textDark} 
+              />
+              <Text style={[
+                styles.menuText,
+                { color: isDark ? colors.textLight : colors.textDark }
+              ]}>
+                {item.label}
+              </Text>
+              <Ionicons 
+                name="chevron-forward" 
+                size={24} 
+                color={colors.accent3} 
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+      </LinearGradient>
+    </View>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  gradient: {
+    flex: 1,
+  },
+  header: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  profileImageContainer: {
+    position: 'relative',
+    marginBottom: 15,
+  },
+  avatarContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: colors.primary,
+    backgroundColor: colors.accent1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: colors.primary,
+    padding: 8,
+    borderRadius: 20,
+    borderWidth: 3,
+    borderColor: colors.accent1,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  bio: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 20,
+    backgroundColor: colors.accent1,
+    marginHorizontal: 20,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  statLabel: {
+    fontSize: 14,
+  },
+  menuContainer: {
+    padding: 20,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.accent1,
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  menuText: {
+    flex: 1,
+    marginLeft: 15,
+    fontSize: 16,
+  },
+}); 

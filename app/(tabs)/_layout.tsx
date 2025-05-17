@@ -1,95 +1,61 @@
-import { FontAwesome5 } from '@expo/vector-icons';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { theme } from '../constants/theme';
+import { StyleSheet } from 'react-native';
+import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
 
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
-
-function ThemeToggle() {
-  const { isDarkMode, toggleTheme } = useTheme();
-
-  const styles = StyleSheet.create({
-    container: {
-      marginRight: 15,
-    },
-    icon: {
-      textShadowColor: isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)',
-      textShadowOffset: { width: 0, height: 0 },
-      textShadowRadius: 10,
-    },
-  });
-
-  return (
-    <TouchableOpacity 
-      onPress={toggleTheme} 
-      style={styles.container}
-      activeOpacity={0.6}
-    >
-      <FontAwesome5
-        name={isDarkMode ? "sun" : "moon"}
-        size={28}
-        solid
-        color={isDarkMode ? '#FFFFFF' : '#000000'}
-        style={styles.icon}
-      />
-    </TouchableOpacity>
-  );
-}
-
 export default function TabLayout() {
-  const { isDarkMode } = useTheme();
-  const colors = isDarkMode ? theme.dark : theme.light;
+  const { isDarkMode, colors } = useTheme();
 
   return (
     <Tabs
       screenOptions={{
-        headerShown: true,
-        headerStyle: {
-          backgroundColor: colors.background,
-          borderBottomColor: colors.border,
-          borderBottomWidth: 1,
-        },
-        headerTintColor: colors.text,
+        tabBarActiveTintColor: isDarkMode ? colors.light.tabIconSelected : colors.light.tabIcon,
+        tabBarInactiveTintColor: isDarkMode ? colors.dark.tabIcon : colors.light.tabIcon,
         tabBarStyle: {
-          backgroundColor: colors.background,
-          borderTopColor: colors.border,
+          backgroundColor: isDarkMode ? colors.dark.background : colors.light.background,
         },
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.text,
+        headerRight: () => <ThemeToggle />,
+        headerStyle: {
+          backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+        },
+        headerTintColor: isDarkMode ? colors.textLight : colors.textDark,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          headerRight: () => <ThemeToggle />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
           title: 'Search',
-          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
-          headerRight: () => <ThemeToggle />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="search" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-          headerRight: () => <ThemeToggle />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  headerButton: {
+    marginRight: 15,
+  },
+});

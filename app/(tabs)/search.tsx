@@ -1,120 +1,137 @@
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import {
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
-import { theme } from '../constants/theme';
 import { useTheme } from '../context/ThemeContext';
 
-type Category = 'clothes' | 'shoes' | 'sports';
-
 export default function SearchScreen() {
-  const { isDarkMode } = useTheme();
-  const colors = isDarkMode ? theme.dark : theme.light;
-  const [selectedCategory, setSelectedCategory] = useState<Category>('clothes');
+  const { isDarkMode, colors } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background,
-      padding: theme.spacing.md,
+    },
+    gradient: {
+      flex: 1,
+    },
+    searchContainer: {
+      padding: 15,
+    },
+    searchBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: isDarkMode ? colors.dark.surface : colors.accent1,
+      borderRadius: 12,
+      padding: 10,
+      marginBottom: 20,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 3.84,
+      elevation: 5,
     },
     searchInput: {
-      backgroundColor: colors.card,
-      padding: theme.spacing.md,
-      borderRadius: theme.borderRadius.md,
-      color: colors.text,
-      marginBottom: theme.spacing.md,
-    },
-    categoryContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: theme.spacing.lg,
-    },
-    categoryButton: {
       flex: 1,
-      padding: theme.spacing.sm,
-      margin: theme.spacing.xs,
-      borderRadius: theme.borderRadius.md,
+      marginLeft: 10,
+      fontSize: 16,
+      color: isDarkMode ? colors.textLight : colors.textDark,
+    },
+    content: {
+      padding: 15,
+    },
+    sectionTitle: {
+      fontSize: 22,
+      fontWeight: '600',
+      marginBottom: 15,
+      color: isDarkMode ? colors.textLight : colors.textDark,
+    },
+    categoriesContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      gap: 10,
+    },
+    categoryCard: {
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      padding: 15,
+      width: '48%',
       alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 3.84,
+      elevation: 5,
     },
     categoryText: {
-      color: colors.text,
-      ...theme.typography.body,
-    },
-    selectedCategory: {
-      backgroundColor: colors.primary,
-    },
-    selectedCategoryText: {
-      color: '#FFFFFF',
-    },
-    resultContainer: {
-      backgroundColor: colors.card,
-      padding: theme.spacing.md,
-      borderRadius: theme.borderRadius.md,
-      marginBottom: theme.spacing.md,
-    },
-    resultTitle: {
-      ...theme.typography.h3,
-      color: colors.text,
-      marginBottom: theme.spacing.sm,
-    },
-    resultText: {
-      ...theme.typography.body,
-      color: colors.text,
+      color: colors.textLight,
+      fontSize: 16,
+      fontWeight: '500',
     },
   });
 
-  const handleSearch = () => {
+  const handleSearch = (text: string) => {
+    setSearchQuery(text);
     // TODO: Implement search functionality
-    console.log('Searching for:', searchQuery, 'in category:', selectedCategory);
+    console.log('Searching for:', text);
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search for a product..."
-        placeholderTextColor={colors.text}
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
+    <View style={styles.container}>
+      <LinearGradient
+        colors={[
+          isDarkMode ? colors.dark.surface : colors.light.surface,
+          isDarkMode ? colors.dark.background : colors.light.background,
+        ]}
+        style={styles.gradient}
+      >
+        <View style={styles.searchContainer}>
+          <View style={styles.searchBar}>
+            <Ionicons 
+              name="search" 
+              size={24} 
+              color={isDarkMode ? colors.textLight : colors.textDark} 
+            />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search for fitness activities..."
+              placeholderTextColor={colors.accent3}
+              value={searchQuery}
+              onChangeText={handleSearch}
+            />
+          </View>
+        </View>
 
-      <View style={styles.categoryContainer}>
-        {(['clothes', 'shoes', 'sports'] as Category[]).map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[
-              styles.categoryButton,
-              selectedCategory === category && styles.selectedCategory,
-            ]}
-            onPress={() => setSelectedCategory(category)}>
-            <Text
-              style={[
-                styles.categoryText,
-                selectedCategory === category && styles.selectedCategoryText,
-              ]}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Sample results - replace with actual search results */}
-      <View style={styles.resultContainer}>
-        <Text style={styles.resultTitle}>Nike T-Shirt</Text>
-        <Text style={styles.resultText}>Recommended size: M</Text>
-      </View>
-
-      <View style={styles.resultContainer}>
-        <Text style={styles.resultTitle}>Adidas Shorts</Text>
-        <Text style={styles.resultText}>Recommended size: L</Text>
-      </View>
-    </ScrollView>
+        <View style={styles.content}>
+          <Text style={styles.sectionTitle}>
+            Popular Categories
+          </Text>
+          <View style={styles.categoriesContainer}>
+            {['Gym', 'Yoga', 'Running', 'Swimming'].map((category) => (
+              <TouchableOpacity 
+                key={category} 
+                style={styles.categoryCard}
+                onPress={() => handleSearch(category)}
+              >
+                <Text style={styles.categoryText}>{category}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </LinearGradient>
+    </View>
   );
 } 

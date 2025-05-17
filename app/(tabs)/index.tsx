@@ -1,11 +1,10 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { theme } from '../constants/theme';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
 export default function TabOneScreen() {
-  const { isDarkMode } = useTheme();
-  const colors = isDarkMode ? theme.dark : theme.light;
+  const { isDarkMode, theme, colors } = useTheme();
 
   const handleProfileSetup = () => {
     router.push('/(tabs)/profile');
@@ -14,60 +13,106 @@ export default function TabOneScreen() {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background,
-      alignItems: 'center',
-      padding: theme.spacing.md,
+    },
+    gradient: {
+      flex: 1,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    content: {
+      padding: 20,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      color: isDarkMode ? colors.textLight : colors.textDark,
+    },
+    card: {
+      backgroundColor: isDarkMode ? colors.dark.surface : colors.accent1,
+      borderRadius: 15,
+      padding: 20,
+      marginBottom: 15,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    cardTitle: {
+      fontSize: 20,
+      fontWeight: '600',
+      marginBottom: 10,
+      color: isDarkMode ? colors.textLight : colors.textDark,
+    },
+    cardText: {
+      fontSize: 16,
+      lineHeight: 24,
+      color: isDarkMode ? colors.textLight : colors.textDark,
     },
     logo: {
       width: 200,
       height: 200,
-      marginTop: theme.spacing.xl,
-      marginBottom: theme.spacing.xl,
-    },
-    title: {
-      ...theme.typography.h1,
-      color: colors.text,
-      marginBottom: theme.spacing.md,
-      textAlign: 'center',
+      marginVertical: 32,
     },
     subtitle: {
-      ...theme.typography.body,
-      color: colors.text,
+      fontSize: 16,
+      letterSpacing: 0.1,
+      color: theme.text,
       textAlign: 'center',
-      marginBottom: theme.spacing.xl,
+      marginBottom: 32,
     },
     button: {
       backgroundColor: colors.primary,
-      padding: theme.spacing.md,
-      borderRadius: theme.borderRadius.md,
+      padding: 16,
+      borderRadius: 8,
       width: '100%',
-      marginBottom: theme.spacing.md,
+      marginBottom: 16,
     },
     buttonText: {
-      color: colors.buttonText,
+      color: isDarkMode ? colors.textLight : colors.textDark,
       textAlign: 'center',
-      ...theme.typography.accent,
+      fontSize: 16,
+      fontWeight: 'bold',
     },
   });
 
   return (
     <View style={styles.container}>
-      <Image
-        source={isDarkMode ? require('../../assets/mag.png') : require('../../assets/mag-dark.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-      <Text style={styles.title}>Welcome to FitFindr</Text>
-      <Text style={styles.subtitle}>
-        Find your perfect fit in clothes, shoes, and sports equipment
-      </Text>
+      <LinearGradient
+        colors={[
+          theme.surface,
+          theme.background,
+        ]}
+        style={styles.gradient}
+      >
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.content}>
+            <Text style={styles.title}>
+              Welcome to FitFindr
+            </Text>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>
+                Your Fitness Journey
+              </Text>
+              <Text style={styles.cardText}>
+                Start exploring fitness opportunities near you!
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </LinearGradient>
 
       <TouchableOpacity style={styles.button} onPress={handleProfileSetup}>
         <Text style={styles.buttonText}>Setup Profile</Text>
       </TouchableOpacity>
 
       <TouchableOpacity 
-        style={[styles.button, { backgroundColor: colors.secondary }]}
+        style={[styles.button, { backgroundColor: colors.primary }]}
         onPress={() => router.push('/(tabs)/search')}>
         <Text style={styles.buttonText}>Find Your Size</Text>
       </TouchableOpacity>

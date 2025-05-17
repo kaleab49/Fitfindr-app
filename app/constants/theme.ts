@@ -1,6 +1,7 @@
 export const theme = {
   light: {
     background: '#FFFFFF',
+    surface: '#D9D9D9',  // Light gray surface
     text: '#000000',
     primary: '#000000',
     secondary: '#000000',
@@ -13,6 +14,7 @@ export const theme = {
   },
   dark: {
     background: '#000000',
+    surface: '#505F4E',  // Deep green surface
     text: '#FFFFFF',
     primary: '#FFFFFF',
     secondary: '#FFFFFF',
