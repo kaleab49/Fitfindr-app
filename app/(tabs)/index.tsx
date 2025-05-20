@@ -54,18 +54,6 @@ export default function TabOneScreen() {
       lineHeight: 24,
       color: isDarkMode ? colors.textLight : colors.textDark,
     },
-    logo: {
-      width: 200,
-      height: 200,
-      marginVertical: 32,
-    },
-    subtitle: {
-      fontSize: 16,
-      letterSpacing: 0.1,
-      color: theme.text,
-      textAlign: 'center',
-      marginBottom: 32,
-    },
     button: {
       backgroundColor: colors.primary,
       padding: 16,
@@ -97,10 +85,10 @@ export default function TabOneScreen() {
             </Text>
             <View style={styles.card}>
               <Text style={styles.cardTitle}>
-                Your Fitness Journey
+                Find Your Perfect Fit
               </Text>
               <Text style={styles.cardText}>
-                Start exploring fitness opportunities near you!
+                Take a photo, paste a link, or select a brand to find your perfect size for clothes, shoes, and sports equipment.
               </Text>
             </View>
           </View>
@@ -108,13 +96,25 @@ export default function TabOneScreen() {
       </LinearGradient>
 
       <TouchableOpacity style={styles.button} onPress={handleProfileSetup}>
-        <Text style={styles.buttonText}>Setup Profile</Text>
+        <Text style={styles.buttonText}>Setup Your Profile</Text>
       </TouchableOpacity>
 
       <TouchableOpacity 
         style={[styles.button, { backgroundColor: colors.primary }]}
         onPress={() => router.push('/(tabs)/search')}>
         <Text style={styles.buttonText}>Find Your Size</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        style={[styles.button, { backgroundColor: colors.primary }]}
+        onPress={() => router.push('/(tabs)/upload')}>
+        <Text style={styles.buttonText}>Upload Photo</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        style={[styles.button, { backgroundColor: colors.primary }]}
+        onPress={() => router.push('/(tabs)/brands')}>
+        <Text style={styles.buttonText}>Browse Brands</Text>
       </TouchableOpacity>
     </View>
   );

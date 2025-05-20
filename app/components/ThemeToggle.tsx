@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { theme } from '../constants/theme';
@@ -23,14 +23,29 @@ export default function ThemeToggle() {
       height: 40,
       justifyContent: 'center',
       alignItems: 'center',
+      marginLeft: 8,
     },
   });
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.iconButton} onPress={() => {}}>
+        <Ionicons
+          name="notifications-outline"
+          size={24}
+          color={colors.text}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.iconButton} onPress={() => {}}>
+        <Ionicons
+          name="settings-outline"
+          size={24}
+          color={colors.text}
+        />
+      </TouchableOpacity>
       <TouchableOpacity style={styles.iconButton} onPress={toggleTheme}>
-        <MaterialCommunityIcons
-          name={isDarkMode ? 'weather-night' : 'weather-sunny'}
+        <Ionicons
+          name={isDarkMode ? "sunny-outline" : "moon-outline"}
           size={24}
           color={colors.text}
         />

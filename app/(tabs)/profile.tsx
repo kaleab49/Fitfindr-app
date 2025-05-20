@@ -56,9 +56,7 @@ export default function ProfileScreen() {
 
         <View style={styles.menuContainer}>
           {[
-            { icon: 'settings-outline', label: 'Settings' },
             { icon: 'bookmark-outline', label: 'Saved' },
-            { icon: 'notifications-outline', label: 'Notifications' },
             { icon: 'help-circle-outline', label: 'Help' },
           ].map((item) => (
             <TouchableOpacity key={item.label} style={styles.menuItem}>
