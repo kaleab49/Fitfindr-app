@@ -111,11 +111,7 @@ export default function TabOneScreen() {
         <Text style={styles.buttonText}>Upload Photo</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={[styles.button, { backgroundColor: colors.primary }]}
-        onPress={() => router.push('/(tabs)/brands')}>
-        <Text style={styles.buttonText}>Browse Brands</Text>
-      </TouchableOpacity>
-    </View>
+      
+</View>
   );
 }

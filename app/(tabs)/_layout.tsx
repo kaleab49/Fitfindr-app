@@ -9,7 +9,7 @@ export default function TabLayout() {
   const { isDarkMode, colors } = useTheme();
 
   return (
-    <Tabs
+    <><Tabs
       screenOptions={{
         tabBarActiveTintColor: isDarkMode ? colors.light.tabIconSelected : colors.light.tabIcon,
         tabBarInactiveTintColor: isDarkMode ? colors.dark.tabIcon : colors.light.tabIcon,
@@ -30,8 +30,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
-        }}
-      />
+        }} />
       <Tabs.Screen
         name="search"
         options={{
@@ -39,8 +38,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search" size={size} color={color} />
           ),
-        }}
-      />
+        }} />
       <Tabs.Screen
         name="profile"
         options={{
@@ -48,14 +46,26 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),
-        }}
-      />
+        }} />
     </Tabs>
-  );
-}
+    <Tabs.Screen
+        name="Upload"
+        options={{
+          title: 'Upload',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="camera" size={size} color={color} />
+          ),
+        }} />
+        </>
+ 
 
+
+      )
 const styles = StyleSheet.create({
+  
   headerButton: {
     marginRight: 15,
   },
 });
+}
+
