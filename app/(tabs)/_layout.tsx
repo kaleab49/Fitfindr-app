@@ -5,24 +5,34 @@ import { StyleSheet } from 'react-native';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
 
+// Main tab navigation layout
 export default function TabLayout() {
+  // Get theme settings
   const { isDarkMode, colors } = useTheme();
 
+  // Tab bar configuration
+  const tabBarConfig = {
+    // Active tab color
+    tabBarActiveTintColor: isDarkMode ? colors.light.tabIconSelected : colors.light.tabIcon,
+    // Inactive tab color
+    tabBarInactiveTintColor: isDarkMode ? colors.dark.tabIcon : colors.light.tabIcon,
+    // Tab bar background
+    tabBarStyle: {
+      backgroundColor: isDarkMode ? colors.dark.background : colors.light.background,
+    },
+    // Theme toggle in header
+    headerRight: () => <ThemeToggle />,
+    // Header style
+    headerStyle: {
+      backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+    },
+    // Header text color
+    headerTintColor: isDarkMode ? colors.textLight : colors.textDark,
+  };
+
   return (
-    <><Tabs
-      screenOptions={{
-        tabBarActiveTintColor: isDarkMode ? colors.light.tabIconSelected : colors.light.tabIcon,
-        tabBarInactiveTintColor: isDarkMode ? colors.dark.tabIcon : colors.light.tabIcon,
-        tabBarStyle: {
-          backgroundColor: isDarkMode ? colors.dark.background : colors.light.background,
-        },
-        headerRight: () => <ThemeToggle />,
-        headerStyle: {
-          backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
-        },
-        headerTintColor: isDarkMode ? colors.textLight : colors.textDark,
-      }}
-    >
+    <Tabs screenOptions={tabBarConfig}>
+      {/* Home Tab */}
       <Tabs.Screen
         name="index"
         options={{
@@ -30,7 +40,10 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
-        }} />
+        }}
+      />
+
+      {/* Search Tab */}
       <Tabs.Screen
         name="search"
         options={{
@@ -38,7 +51,10 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search" size={size} color={color} />
           ),
-        }} />
+        }}
+      />
+
+      {/* Profile Tab */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -46,26 +62,27 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),
-        }} />
-    </Tabs>
-    <Tabs.Screen
-        name="Upload"
+        }}
+      />
+
+      {/* Upload Tab */}
+      <Tabs.Screen
+        name="upload"
         options={{
           title: 'Upload',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="camera" size={size} color={color} />
           ),
-        }} />
-        </>
- 
+        }}
+      />
+    </Tabs>
+  );
+}
 
-
-      )
+// Styles
 const styles = StyleSheet.create({
-  
   headerButton: {
     marginRight: 15,
   },
 });
-}
 

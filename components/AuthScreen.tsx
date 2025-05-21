@@ -9,29 +9,37 @@ import {
 } from 'react-native';
 import { useAuth } from '../app/context/AuthContext';
 
+// Main authentication screen component
 export const AuthScreen: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  // State variables
+  const [isLogin, setIsLogin] = useState(true);  // Toggle between login and signup
+  const [email, setEmail] = useState('');        // Email input
+  const [password, setPassword] = useState('');  // Password input
+  const [name, setName] = useState('');          // Name input (for signup)
+  const [error, setError] = useState<string | null>(null);  // Error message
+  
+  // Get authentication functions from context
   const { signIn, signUp, loading } = useAuth();
 
+  // Handle form submission
   const handleSubmit = async () => {
+    // Clear any previous errors
     setError(null);
 
-    // Basic validation
+    // Check if required fields are filled
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
     }
 
+    // Check name for signup
     if (!isLogin && !name) {
       setError('Please enter your name');
       return;
     }
 
     try {
+      // Call appropriate auth function
       if (isLogin) {
         await signIn(email, password);
       } else {
@@ -45,10 +53,12 @@ export const AuthScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
+        {/* Title */}
         <Text style={styles.title}>
           {isLogin ? 'Welcome Back!' : 'Create Account'}
         </Text>
 
+        {/* Login/Signup Toggle */}
         <View style={styles.toggleContainer}>
           <TouchableOpacity
             style={[styles.toggleButton, isLogin && styles.activeToggle]}
@@ -68,6 +78,7 @@ export const AuthScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Name input (only for signup) */}
         {!isLogin && (
           <TextInput
             style={styles.input}
@@ -78,6 +89,7 @@ export const AuthScreen: React.FC = () => {
           />
         )}
 
+        {/* Email input */}
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -88,6 +100,7 @@ export const AuthScreen: React.FC = () => {
           placeholderTextColor="#666"
         />
 
+        {/* Password input */}
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -97,6 +110,7 @@ export const AuthScreen: React.FC = () => {
           placeholderTextColor="#666"
         />
 
+        {/* Submit button */}
         <TouchableOpacity 
           style={[styles.submitButton, loading && styles.submitButtonDisabled]} 
           onPress={handleSubmit}
@@ -111,6 +125,7 @@ export const AuthScreen: React.FC = () => {
           )}
         </TouchableOpacity>
 
+        {/* Error message */}
         {error && (
           <Text style={styles.errorText}>{error}</Text>
         )}
@@ -119,13 +134,17 @@ export const AuthScreen: React.FC = () => {
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
+  // Main container
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
+  // Form container
   formContainer: {
     width: '90%',
     maxWidth: 400,
@@ -141,6 +160,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
+  
+  // Title text
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -148,6 +169,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
   },
+  
+  // Login/Signup toggle container
   toggleContainer: {
     flexDirection: 'row',
     backgroundColor: '#f0f0f0',
@@ -155,23 +178,33 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 4,
   },
+  
+  // Toggle button
   toggleButton: {
     flex: 1,
     paddingVertical: 12,
     alignItems: 'center',
     borderRadius: 22,
   },
+  
+  // Active toggle button
   activeToggle: {
     backgroundColor: '#007AFF',
   },
+  
+  // Toggle text
   toggleText: {
     color: '#666',
     fontSize: 16,
   },
+  
+  // Active toggle text
   activeToggleText: {
     color: 'white',
     fontWeight: 'bold',
   },
+  
+  // Input fields
   input: {
     backgroundColor: '#f8f8f8',
     borderRadius: 8,
@@ -179,6 +212,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
   },
+  
+  // Submit button
   submitButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
@@ -186,14 +221,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
+  
+  // Disabled submit button
   submitButtonDisabled: {
     opacity: 0.7,
   },
+  
+  // Submit button text
   submitButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
+  
+  // Error message
   errorText: {
     color: 'red',
     textAlign: 'center',

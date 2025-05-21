@@ -1,20 +1,30 @@
 import { Stack } from 'expo-router';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 
+// This tells the app where to start
 export const unstable_settings = {
   initialRouteName: 'auth/sign-in',
 };
 
+// Main navigation component
 function RootLayoutNav() {
+  // Get user authentication status
   const { user, loading } = useAuth();
 
+  // Show loading screen while checking authentication
   if (loading) {
-    return <View style={{ flex: 1 }} />;
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
     <Stack>
+      {/* Sign In Screen */}
       <Stack.Screen 
         name="auth/sign-in" 
         options={{ 
@@ -22,6 +32,8 @@ function RootLayoutNav() {
           gestureEnabled: false 
         }} 
       />
+      
+      {/* Main App Tabs */}
       <Stack.Screen 
         name="(tabs)" 
         options={{ 
@@ -29,6 +41,8 @@ function RootLayoutNav() {
           gestureEnabled: false 
         }} 
       />
+      
+      {/* Profile Setup Screen */}
       <Stack.Screen
         name="profile/setup"
         options={{
@@ -40,10 +54,13 @@ function RootLayoutNav() {
   );
 }
 
+// Root component that wraps the entire app
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <RootLayoutNav />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <RootLayoutNav />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
