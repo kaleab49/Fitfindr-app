@@ -27,16 +27,40 @@ export default function SignUpScreen() {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      // Sign up the user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) throw error;
-      Alert.alert('Success', 'Please check your email for verification');
-      router.replace('/login');
-    } catch (error) {
-      Alert.alert('Error', error.message);
+      if (signUpError) throw signUpError;
+
+      if (authData.user) {
+        // Create user profile in the database
+        const { error: profileError } = await supabase
+          .from('user_profiles')
+          .insert({
+            user_id: authData.user.id,
+            email: email,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+
+        if (profileError) throw profileError;
+
+        Alert.alert(
+          'Success', 
+          'Account created successfully! Please check your email for verification.',
+          [
+            {
+              text: 'OK',
+              onPress: () => router.replace('/login')
+            }
+          ]
+        );
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'An error occurred during sign up');
     } finally {
       setIsLoading(false);
     }

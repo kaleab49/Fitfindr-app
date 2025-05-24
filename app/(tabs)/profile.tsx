@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
 import { useTheme } from '../context/ThemeContext';
@@ -30,6 +30,7 @@ type BodyData = {
 export default function ProfileScreen() {
   const { isDarkMode, colors } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [bodyData, setBodyData] = useState<BodyData>({
     height: '',
     weight: '',
@@ -47,6 +48,51 @@ export default function ProfileScreen() {
     preferredFit: 'regular',
     profileImage: undefined,
   });
+
+  // Load user profile data
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
+
+  const loadUserProfile = async () => {
+    try {
+      setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setBodyData({
+          height: data.height || '',
+          weight: data.weight || '',
+          age: data.age || '',
+          gender: data.gender || 'male',
+          chest: data.chest || '',
+          shoulder: data.shoulder || '',
+          sleeve: data.sleeve || '',
+          neck: data.neck || '',
+          waist: data.waist || '',
+          hip: data.hip || '',
+          inseam: data.inseam || '',
+          thigh: data.thigh || '',
+          shoeSize: data.shoe_size || '',
+          preferredFit: data.preferred_fit || 'regular',
+          profileImage: data.profile_image || undefined,
+        });
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Failed to load profile');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const pickImage = async () => {
     try {
@@ -101,6 +147,7 @@ export default function ProfileScreen() {
     }
 
     try {
+      setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
@@ -123,8 +170,21 @@ export default function ProfileScreen() {
         .from('user_profiles')
         .upsert({
           user_id: user.id,
-          ...bodyData,
-          profileImage: profileImageUrl,
+          height: bodyData.height,
+          weight: bodyData.weight,
+          age: bodyData.age,
+          gender: bodyData.gender,
+          chest: bodyData.chest,
+          shoulder: bodyData.shoulder,
+          sleeve: bodyData.sleeve,
+          neck: bodyData.neck,
+          waist: bodyData.waist,
+          hip: bodyData.hip,
+          inseam: bodyData.inseam,
+          thigh: bodyData.thigh,
+          shoe_size: bodyData.shoeSize,
+          preferred_fit: bodyData.preferredFit,
+          profile_image: profileImageUrl,
           updated_at: new Date().toISOString(),
         });
 
@@ -134,6 +194,8 @@ export default function ProfileScreen() {
       Alert.alert('Success', 'Profile updated successfully');
     } catch (error: any) {
       Alert.alert('Error', error.message || 'An error occurred while saving your profile');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -595,7 +657,11 @@ export default function ProfileScreen() {
         ]}
         style={styles.gradient}
       >
-        {isEditing ? renderEditForm() : renderProfileView()}
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Loading...</Text>
+          </View>
+        ) : isEditing ? renderEditForm() : renderProfileView()}
       </LinearGradient>
     </View>
   );
@@ -763,5 +829,14 @@ const styles = StyleSheet.create({
   imageButtonText: {
     fontSize: 14,
     fontWeight: '500',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 }); 
