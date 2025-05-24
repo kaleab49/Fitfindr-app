@@ -1,29 +1,29 @@
 export const theme = {
   light: {
-    background: '#FFFFFF',
-    surface: '#D9D9D9',  // Light gray surface
+    background: '#E1D5C9',
+    surface: '#E1D5C9',
     text: '#000000',
-    primary: '#000000',
-    secondary: '#000000',
-    accent: '#000000',
-    border: '#000000',
-    card: '#FFFFFF',
-    error: '#000000',
-    success: '#000000',
+    primary: '#000000', // Black for buttons
+    secondary: '#9C27B0', // Purple for switches/highlights
+    accent: '#9C27B0', // Purple for switches/highlights
+    border: '#9C27B0', // Purple
+    card: '#E1D5C9',
+    error: '#E57373',
+    success: '#81C784',
     buttonText: '#FFFFFF',
   },
   dark: {
-    background: '#000000',
-    surface: '#505F4E',  // Deep green surface
-    text: '#FFFFFF',
-    primary: '#FFFFFF',
-    secondary: '#FFFFFF',
-    accent: '#FFFFFF',
-    border: '#FFFFFF',
-    card: '#000000',
-    error: '#FFFFFF',
-    success: '#FFFFFF',
-    buttonText: '#000000',
+    background: '#E1D5C9',
+    surface: '#E1D5C9',
+    text: '#000000',
+    primary: '#000000', // Black for buttons
+    secondary: '#9C27B0', // Purple for switches/highlights
+    accent: '#9C27B0', // Purple for switches/highlights
+    border: '#9C27B0', // Purple
+    card: '#E1D5C9',
+    error: '#E57373',
+    success: '#81C784',
+    buttonText: '#FFFFFF',
   },
   spacing: {
     xs: 4,
