@@ -96,12 +96,14 @@ export default function ProfileScreen() {
 
   const pickImage = async () => {
     try {
+      console.log('Requesting media library permissions...');
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission needed', 'Please grant permission to access your photos');
         return;
       }
 
+      console.log('Launching image picker...');
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -109,32 +111,42 @@ export default function ProfileScreen() {
         quality: 0.5,
       });
 
+      console.log('Image picker result:', result);
+
       if (!result.canceled) {
+        console.log('Selected image URI:', result.assets[0].uri);
         setBodyData({ ...bodyData, profileImage: result.assets[0].uri });
       }
     } catch (error) {
+      console.error('Error picking image:', error);
       Alert.alert('Error', 'Failed to pick image');
     }
   };
 
   const takePhoto = async () => {
     try {
+      console.log('Requesting camera permissions...');
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission needed', 'Please grant permission to access your camera');
         return;
       }
 
+      console.log('Launching camera...');
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.5,
       });
 
+      console.log('Camera result:', result);
+
       if (!result.canceled) {
+        console.log('Captured image URI:', result.assets[0].uri);
         setBodyData({ ...bodyData, profileImage: result.assets[0].uri });
       }
     } catch (error) {
+      console.error('Error taking photo:', error);
       Alert.alert('Error', 'Failed to take photo');
     }
   };
@@ -154,18 +166,52 @@ export default function ProfileScreen() {
       // Upload profile image if it exists and is a new image
       let profileImageUrl = bodyData.profileImage;
       if (bodyData.profileImage && bodyData.profileImage.startsWith('file://')) {
-        const response = await fetch(bodyData.profileImage);
-        const blob = await response.blob();
-        const fileExt = bodyData.profileImage.split('.').pop();
-        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('profile-images')
-          .upload(fileName, blob);
+        try {
+          console.log('Starting image upload process...');
+          console.log('Image URI:', bodyData.profileImage);
+          
+          // Convert image to blob
+          const response = await fetch(bodyData.profileImage);
+          const blob = await response.blob();
+          console.log('Blob created:', blob);
+          
+          // Generate a unique file name
+          const fileExt = bodyData.profileImage.split('.').pop() || 'jpg';
+          const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+          console.log('Generated filename:', fileName);
 
-        if (uploadError) throw uploadError;
-        profileImageUrl = uploadData.path;
+          // Upload to Supabase Storage
+          console.log('Attempting to upload to Supabase...');
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('profile-images')
+            .upload(fileName, blob, {
+              cacheControl: '3600',
+              upsert: true
+            });
+
+          if (uploadError) {
+            console.error('Upload error:', uploadError);
+            throw uploadError;
+          }
+
+          console.log('Upload successful:', uploadData);
+
+          // Get the public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('profile-images')
+            .getPublicUrl(fileName);
+
+          console.log('Public URL:', publicUrl);
+          profileImageUrl = publicUrl;
+        } catch (error: any) {
+          console.error('Error uploading image:', error);
+          Alert.alert('Error', 'Failed to upload profile image. Please try again.');
+          return;
+        }
       }
 
+      // Update user profile
+      console.log('Updating user profile with image URL:', profileImageUrl);
       const { error } = await supabase
         .from('user_profiles')
         .upsert({
@@ -188,11 +234,15 @@ export default function ProfileScreen() {
           updated_at: new Date().toISOString(),
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Profile update error:', error);
+        throw error;
+      }
       
       setIsEditing(false);
       Alert.alert('Success', 'Profile updated successfully');
     } catch (error: any) {
+      console.error('Final error:', error);
       Alert.alert('Error', error.message || 'An error occurred while saving your profile');
     } finally {
       setIsLoading(false);
