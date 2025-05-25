@@ -1,84 +1,717 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
-import { colors } from '../../constants/colors';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../../lib/supabase';
+import { useTheme } from '../context/ThemeContext';
+
+type BodyData = {
+  height: string;
+  weight: string;
+  age: string;
+  gender: 'male' | 'female' | 'other';
+  // Upper body measurements
+  chest: string;
+  shoulder: string;
+  sleeve: string;
+  neck: string;
+  // Lower body measurements
+  waist: string;
+  hip: string;
+  inseam: string;
+  thigh: string;
+  // Additional measurements
+  shoeSize: string;
+  preferredFit: 'slim' | 'regular' | 'loose';
+  profileImage?: string;
+};
 
 export default function ProfileScreen() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDarkMode, colors } = useTheme();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [bodyData, setBodyData] = useState<BodyData>({
+    height: '',
+    weight: '',
+    age: '',
+    gender: 'male',
+    chest: '',
+    shoulder: '',
+    sleeve: '',
+    neck: '',
+    waist: '',
+    hip: '',
+    inseam: '',
+    thigh: '',
+    shoeSize: '',
+    preferredFit: 'regular',
+    profileImage: undefined,
+  });
+
+  // Load user profile data
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
+
+  const loadUserProfile = async () => {
+    try {
+      setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setBodyData({
+          height: data.height || '',
+          weight: data.weight || '',
+          age: data.age || '',
+          gender: data.gender || 'male',
+          chest: data.chest || '',
+          shoulder: data.shoulder || '',
+          sleeve: data.sleeve || '',
+          neck: data.neck || '',
+          waist: data.waist || '',
+          hip: data.hip || '',
+          inseam: data.inseam || '',
+          thigh: data.thigh || '',
+          shoeSize: data.shoe_size || '',
+          preferredFit: data.preferred_fit || 'regular',
+          profileImage: data.profile_image || undefined,
+        });
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Failed to load profile');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const pickImage = async () => {
+    try {
+      console.log('Requesting media library permissions...');
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission needed', 'Please grant permission to access your photos');
+        return;
+      }
+
+      console.log('Launching image picker...');
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
+
+      console.log('Image picker result:', result);
+
+      if (!result.canceled) {
+        console.log('Selected image URI:', result.assets[0].uri);
+        setBodyData({ ...bodyData, profileImage: result.assets[0].uri });
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Error', 'Failed to pick image');
+    }
+  };
+
+  const takePhoto = async () => {
+    try {
+      console.log('Requesting camera permissions...');
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission needed', 'Please grant permission to access your camera');
+        return;
+      }
+
+      console.log('Launching camera...');
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
+
+      console.log('Camera result:', result);
+
+      if (!result.canceled) {
+        console.log('Captured image URI:', result.assets[0].uri);
+        setBodyData({ ...bodyData, profileImage: result.assets[0].uri });
+      }
+    } catch (error) {
+      console.error('Error taking photo:', error);
+      Alert.alert('Error', 'Failed to take photo');
+    }
+  };
+
+  const handleSave = async () => {
+    // Validate required inputs
+    if (!bodyData.height || !bodyData.weight || !bodyData.age) {
+      Alert.alert('Error', 'Please fill in all required fields');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      // Upload profile image if it exists and is a new image
+      let profileImageUrl = bodyData.profileImage;
+      if (bodyData.profileImage && bodyData.profileImage.startsWith('file://')) {
+        try {
+          console.log('Starting image upload process...');
+          console.log('Image URI:', bodyData.profileImage);
+          
+          // Convert image to blob
+          const response = await fetch(bodyData.profileImage);
+          const blob = await response.blob();
+          console.log('Blob created:', blob);
+          
+          // Generate a unique file name
+          const fileExt = bodyData.profileImage.split('.').pop() || 'jpg';
+          const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+          console.log('Generated filename:', fileName);
+
+          // Upload to Supabase Storage
+          console.log('Attempting to upload to Supabase...');
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('profile-images')
+            .upload(fileName, blob, {
+              cacheControl: '3600',
+              upsert: true
+            });
+
+          if (uploadError) {
+            console.error('Upload error:', uploadError);
+            throw uploadError;
+          }
+
+          console.log('Upload successful:', uploadData);
+
+          // Get the public URL
+          const { data: { publicUrl } } = supabase.storage
+            .from('profile-images')
+            .getPublicUrl(fileName);
+
+          console.log('Public URL:', publicUrl);
+          profileImageUrl = publicUrl;
+        } catch (error: any) {
+          console.error('Error uploading image:', error);
+          Alert.alert('Error', 'Failed to upload profile image. Please try again.');
+          return;
+        }
+      }
+
+      // Update user profile
+      console.log('Updating user profile with image URL:', profileImageUrl);
+      const { error } = await supabase
+        .from('user_profiles')
+        .upsert({
+          user_id: user.id,
+          height: bodyData.height,
+          weight: bodyData.weight,
+          age: bodyData.age,
+          gender: bodyData.gender,
+          chest: bodyData.chest,
+          shoulder: bodyData.shoulder,
+          sleeve: bodyData.sleeve,
+          neck: bodyData.neck,
+          waist: bodyData.waist,
+          hip: bodyData.hip,
+          inseam: bodyData.inseam,
+          thigh: bodyData.thigh,
+          shoe_size: bodyData.shoeSize,
+          preferred_fit: bodyData.preferredFit,
+          profile_image: profileImageUrl,
+          updated_at: new Date().toISOString(),
+        });
+
+      if (error) {
+        console.error('Profile update error:', error);
+        throw error;
+      }
+      
+      setIsEditing(false);
+      Alert.alert('Success', 'Profile updated successfully');
+    } catch (error: any) {
+      console.error('Final error:', error);
+      Alert.alert('Error', error.message || 'An error occurred while saving your profile');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const renderEditForm = () => (
+    <ScrollView style={styles.formContainer}>
+      {/* Profile Image Section */}
+      <View style={styles.profileImageSection}>
+        {bodyData.profileImage ? (
+          <Image 
+            source={{ uri: bodyData.profileImage }} 
+            style={styles.editProfileImage}
+          />
+        ) : (
+          <View style={[styles.editAvatarContainer, { backgroundColor: colors.accent1 }]}>
+            <Ionicons 
+              name="person" 
+              size={60} 
+              color={isDarkMode ? colors.textLight : colors.textDark} 
+            />
+          </View>
+        )}
+        <View style={styles.imageButtonsContainer}>
+          <TouchableOpacity
+            style={[styles.imageButton, { backgroundColor: colors.primary }]}
+            onPress={takePhoto}
+          >
+            <Ionicons name="camera" size={20} color={colors.textLight} />
+            <Text style={[styles.imageButtonText, { color: colors.textLight }]}>Take Photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.imageButton, { backgroundColor: colors.primary }]}
+            onPress={pickImage}
+          >
+            <Ionicons name="images" size={20} color={colors.textLight} />
+            <Text style={[styles.imageButtonText, { color: colors.textLight }]}>Choose Photo</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Basic Information */}
+      <Text style={[styles.sectionTitle, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+        Basic Information
+      </Text>
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Height (cm) *
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.height}
+          onChangeText={(text) => setBodyData({ ...bodyData, height: text })}
+          keyboardType="numeric"
+          placeholder="Enter height in cm"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+              />
+            </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Weight (kg) *
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.weight}
+          onChangeText={(text) => setBodyData({ ...bodyData, weight: text })}
+          keyboardType="numeric"
+          placeholder="Enter weight in kg"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+          </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Age *
+          </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.age}
+          onChangeText={(text) => setBodyData({ ...bodyData, age: text })}
+          keyboardType="numeric"
+          placeholder="Enter age"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+        </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Gender
+        </Text>
+        <View style={styles.radioGroup}>
+          {['male', 'female', 'other'].map((gender) => (
+            <TouchableOpacity
+              key={gender}
+              style={[
+                styles.radioButton,
+                bodyData.gender === gender && styles.radioButtonSelected,
+                { 
+                  backgroundColor: bodyData.gender === gender 
+                    ? colors.primary 
+                    : isDarkMode 
+                      ? colors.dark.surface 
+                      : colors.light.surface,
+                  borderColor: colors.primary
+                }
+              ]}
+              onPress={() => setBodyData({ ...bodyData, gender: gender as BodyData['gender'] })}
+            >
+              <Text style={[
+                styles.radioButtonText,
+                { 
+                  color: bodyData.gender === gender 
+                    ? colors.textLight 
+                    : isDarkMode 
+                      ? colors.textLight 
+                      : colors.textDark 
+                }
+              ]}>
+                {gender.charAt(0).toUpperCase() + gender.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      {/* Upper Body Measurements */}
+      <Text style={[styles.sectionTitle, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+        Upper Body Measurements
+      </Text>
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Chest (cm)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.chest}
+          onChangeText={(text) => setBodyData({ ...bodyData, chest: text })}
+          keyboardType="numeric"
+          placeholder="Enter chest measurement"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Shoulder Width (cm)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.shoulder}
+          onChangeText={(text) => setBodyData({ ...bodyData, shoulder: text })}
+          keyboardType="numeric"
+          placeholder="Enter shoulder width"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Sleeve Length (cm)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.sleeve}
+          onChangeText={(text) => setBodyData({ ...bodyData, sleeve: text })}
+          keyboardType="numeric"
+          placeholder="Enter sleeve length"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Neck (cm)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.neck}
+          onChangeText={(text) => setBodyData({ ...bodyData, neck: text })}
+          keyboardType="numeric"
+          placeholder="Enter neck measurement"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+      </View>
+
+      {/* Lower Body Measurements */}
+      <Text style={[styles.sectionTitle, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+        Lower Body Measurements
+      </Text>
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Waist (cm)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.waist}
+          onChangeText={(text) => setBodyData({ ...bodyData, waist: text })}
+          keyboardType="numeric"
+          placeholder="Enter waist measurement"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Hip (cm)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.hip}
+          onChangeText={(text) => setBodyData({ ...bodyData, hip: text })}
+          keyboardType="numeric"
+          placeholder="Enter hip measurement"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Inseam (cm)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.inseam}
+          onChangeText={(text) => setBodyData({ ...bodyData, inseam: text })}
+          keyboardType="numeric"
+          placeholder="Enter inseam length"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Thigh (cm)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.thigh}
+          onChangeText={(text) => setBodyData({ ...bodyData, thigh: text })}
+          keyboardType="numeric"
+          placeholder="Enter thigh measurement"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+      </View>
+
+      {/* Additional Information */}
+      <Text style={[styles.sectionTitle, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+        Additional Information
+      </Text>
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Shoe Size (EU)
+        </Text>
+        <TextInput
+          style={[styles.input, { 
+            backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
+            color: isDarkMode ? colors.textLight : colors.textDark,
+          }]}
+          value={bodyData.shoeSize}
+          onChangeText={(text) => setBodyData({ ...bodyData, shoeSize: text })}
+          keyboardType="numeric"
+          placeholder="Enter EU shoe size"
+          placeholderTextColor={isDarkMode ? colors.textLight + '80' : colors.textDark + '80'}
+        />
+        </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={[styles.label, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Preferred Fit
+        </Text>
+        <View style={styles.radioGroup}>
+          {[
+            { value: 'slim', label: 'Slim' },
+            { value: 'regular', label: 'Regular' },
+            { value: 'loose', label: 'Loose' }
+          ].map(({ value, label }) => (
+            <TouchableOpacity
+              key={value}
+              style={[
+                styles.radioButton,
+                bodyData.preferredFit === value && styles.radioButtonSelected,
+                { 
+                  backgroundColor: bodyData.preferredFit === value 
+                    ? colors.primary 
+                    : isDarkMode 
+                      ? colors.dark.surface 
+                      : colors.light.surface,
+                  borderColor: colors.primary
+                }
+              ]}
+              onPress={() => setBodyData({ ...bodyData, preferredFit: value as BodyData['preferredFit'] })}
+            >
+              <Text style={[
+                styles.radioButtonText,
+                { 
+                  color: bodyData.preferredFit === value 
+                    ? colors.textLight 
+                    : isDarkMode 
+                      ? colors.textLight 
+                      : colors.textDark 
+                }
+              ]}>
+                {label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      <TouchableOpacity
+        style={[styles.saveButton, { backgroundColor: colors.primary }]}
+        onPress={handleSave}
+      >
+        <Text style={styles.saveButtonText}>Save Profile</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+
+  const renderProfileView = () => (
+    <View style={styles.profileView}>
+      <View style={styles.profileImageContainer}>
+        {bodyData.profileImage ? (
+          <Image 
+            source={{ uri: bodyData.profileImage }} 
+            style={styles.profileImage}
+          />
+        ) : (
+          <View style={[styles.avatarContainer, { backgroundColor: colors.accent1 }]}>
+            <Ionicons 
+              name="person" 
+              size={60} 
+              color={isDarkMode ? colors.textLight : colors.textDark} 
+            />
+          </View>
+        )}
+        <TouchableOpacity 
+          style={[styles.editButton, { backgroundColor: colors.primary }]}
+          onPress={() => setIsEditing(true)}
+        >
+          <Ionicons name="pencil" size={20} color={colors.textLight} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.statsContainer}>
+        <View style={styles.statItem}>
+          <Text style={[styles.statValue, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            {bodyData.height ? `${bodyData.height} cm` : '-'}
+          </Text>
+          <Text style={[styles.statLabel, { color: colors.accent3 }]}>Height</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Text style={[styles.statValue, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            {bodyData.weight ? `${bodyData.weight} kg` : '-'}
+          </Text>
+          <Text style={[styles.statLabel, { color: colors.accent3 }]}>Weight</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Text style={[styles.statValue, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            {bodyData.age ? `${bodyData.age} years` : '-'}
+          </Text>
+          <Text style={[styles.statLabel, { color: colors.accent3 }]}>Age</Text>
+        </View>
+      </View>
+
+      <View style={styles.detailsContainer}>
+        <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Gender: {bodyData.gender.charAt(0).toUpperCase() + bodyData.gender.slice(1)}
+        </Text>
+        {bodyData.chest && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Chest: {bodyData.chest} cm
+          </Text>
+        )}
+        {bodyData.shoulder && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Shoulder: {bodyData.shoulder} cm
+          </Text>
+        )}
+        {bodyData.sleeve && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Sleeve: {bodyData.sleeve} cm
+          </Text>
+        )}
+        {bodyData.neck && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Neck: {bodyData.neck} cm
+          </Text>
+        )}
+        {bodyData.waist && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Waist: {bodyData.waist} cm
+          </Text>
+        )}
+        {bodyData.hip && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Hip: {bodyData.hip} cm
+          </Text>
+        )}
+        {bodyData.inseam && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Inseam: {bodyData.inseam} cm
+          </Text>
+        )}
+        {bodyData.thigh && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Thigh: {bodyData.thigh} cm
+          </Text>
+        )}
+        {bodyData.shoeSize && (
+          <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+            Shoe Size: EU {bodyData.shoeSize}
+          </Text>
+        )}
+        <Text style={[styles.detailLabel, { color: isDarkMode ? colors.textLight : colors.textDark }]}>
+          Preferred Fit: {bodyData.preferredFit.charAt(0).toUpperCase() + bodyData.preferredFit.slice(1)}
+        </Text>
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
       <LinearGradient
         colors={[
-          isDark ? colors.dark.surface : colors.light.surface,
-          isDark ? colors.dark.background : colors.light.background,
+          isDarkMode ? colors.dark.surface : colors.light.surface,
+          isDarkMode ? colors.dark.background : colors.light.background,
         ]}
         style={styles.gradient}
       >
-        <View style={styles.header}>
-          <View style={styles.profileImageContainer}>
-            <View style={styles.avatarContainer}>
-              <Ionicons 
-                name="person" 
-                size={60} 
-                color={isDark ? colors.textLight : colors.textDark} 
-              />
-            </View>
-            <TouchableOpacity style={styles.editButton}>
-              <Ionicons name="camera" size={20} color={colors.textLight} />
-            </TouchableOpacity>
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Loading...</Text>
           </View>
-          <Text style={[styles.name, { color: isDark ? colors.textLight : colors.textDark }]}>
-            John Doe
-          </Text>
-          <Text style={[styles.bio, { color: isDark ? colors.textLight : colors.textDark }]}>
-            Fitness Enthusiast
-          </Text>
-        </View>
-
-        <View style={styles.statsContainer}>
-          {[
-            { label: 'Workouts', value: '24' },
-            { label: 'Following', value: '210' },
-            { label: 'Followers', value: '158' },
-          ].map((stat) => (
-            <View key={stat.label} style={styles.statItem}>
-              <Text style={[styles.statValue, { color: isDark ? colors.textLight : colors.textDark }]}>
-                {stat.value}
-              </Text>
-              <Text style={[styles.statLabel, { color: isDark ? colors.accent3 : colors.accent3 }]}>
-                {stat.label}
-              </Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.menuContainer}>
-          {[
-            { icon: 'bookmark-outline', label: 'Saved' },
-            { icon: 'help-circle-outline', label: 'Help' },
-          ].map((item) => (
-            <TouchableOpacity key={item.label} style={styles.menuItem}>
-              <Ionicons 
-                name={item.icon} 
-                size={24} 
-                color={isDark ? colors.textLight : colors.textDark} 
-              />
-              <Text style={[
-                styles.menuText,
-                { color: isDark ? colors.textLight : colors.textDark }
-              ]}>
-                {item.label}
-              </Text>
-              <Ionicons 
-                name="chevron-forward" 
-                size={24} 
-                color={colors.accent3} 
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
+        ) : isEditing ? renderEditForm() : renderProfileView()}
       </LinearGradient>
     </View>
   );
@@ -91,58 +724,97 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
   },
-  header: {
+  formContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 15,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  input: {
+    height: 50,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+  },
+  radioGroup: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  radioButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#007AFF',
+  },
+  radioButtonSelected: {
+    backgroundColor: '#007AFF',
+  },
+  radioButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  saveButton: {
+    height: 50,
+    borderRadius: 8,
+    justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 40,
+  },
+  saveButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  profileView: {
+    flex: 1,
     padding: 20,
   },
   profileImageContainer: {
-    position: 'relative',
-    marginBottom: 15,
+    alignItems: 'center',
+    marginBottom: 20,
   },
   avatarContainer: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    borderWidth: 3,
-    borderColor: colors.primary,
-    backgroundColor: colors.accent1,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#007AFF',
   },
   editButton: {
     position: 'absolute',
     bottom: 0,
-    right: 0,
-    backgroundColor: colors.primary,
+    right: '35%',
     padding: 8,
     borderRadius: 20,
     borderWidth: 3,
-    borderColor: colors.accent1,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  bio: {
-    fontSize: 16,
-    marginBottom: 20,
+    borderColor: '#FFFFFF',
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: 20,
-    backgroundColor: colors.accent1,
-    marginHorizontal: 20,
+    backgroundColor: '#F5F5F5',
+    padding: 20,
     borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    marginBottom: 20,
   },
   statItem: {
     alignItems: 'center',
@@ -155,28 +827,66 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 14,
   },
-  menuContainer: {
+  detailsContainer: {
+    backgroundColor: '#F5F5F5',
     padding: 20,
+    borderRadius: 15,
   },
-  menuItem: {
+  detailLabel: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: '#007AFF',
+  },
+  editProfileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 3,
+    borderColor: '#007AFF',
+  },
+  profileImageSection: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  editAvatarContainer: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#007AFF',
+  },
+  imageButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 10,
+    marginTop: 15,
+  },
+  imageButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.accent1,
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    padding: 10,
+    borderRadius: 8,
+    gap: 5,
   },
-  menuText: {
+  imageButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  loadingContainer: {
     flex: 1,
-    marginLeft: 15,
-    fontSize: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 }); 

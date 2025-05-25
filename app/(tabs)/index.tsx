@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
 export default function TabOneScreen() {
@@ -22,12 +22,17 @@ export default function TabOneScreen() {
     },
     content: {
       padding: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      flex: 1,
     },
     title: {
       fontSize: 28,
       fontWeight: 'bold',
-      marginBottom: 20,
+      textAlign: 'center',
       color: isDarkMode ? colors.textLight : colors.textDark,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     card: {
       backgroundColor: isDarkMode ? colors.dark.surface : colors.accent1,
@@ -67,6 +72,22 @@ export default function TabOneScreen() {
       fontSize: 16,
       fontWeight: 'bold',
     },
+    image: {
+      width: window.innerWidth * 0.8,
+      height: window.innerHeight * 0.8,
+      marginTop: 24,
+      resizeMode: 'contain',
+      
+     
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      elevation: 6,
+      justifyContent: 'center',
+      alignItems: 'center',
+      flex: 1,
+    },
   });
 
   return (
@@ -81,41 +102,20 @@ export default function TabOneScreen() {
         <ScrollView style={styles.scrollView}>
           <View style={styles.content}>
             <Text style={styles.title}>
-              Welcome to FitFindr
+              Welcome to FitFindr!
             </Text>
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>
-                Find Your Perfect Fit
-              </Text>
-              <Text style={styles.cardText}>
-                Take a photo, paste a link, or select a brand to find your perfect size for clothes, shoes, and sports equipment.
-              </Text>
-            </View>
+            <Image
+              source={require('../../assets/sizegirl.png')}
+              style={styles.image}
+              accessibilityLabel="Size Girl Illustration"
+            />
           </View>
         </ScrollView>
       </LinearGradient>
 
-      <TouchableOpacity style={styles.button} onPress={handleProfileSetup}>
-        <Text style={styles.buttonText}>Setup Your Profile</Text>
-      </TouchableOpacity>
+      
 
-      <TouchableOpacity 
-        style={[styles.button, { backgroundColor: colors.primary }]}
-        onPress={() => router.push('/(tabs)/search')}>
-        <Text style={styles.buttonText}>Find Your Size</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={[styles.button, { backgroundColor: colors.primary }]}
-        onPress={() => router.push('/(tabs)/upload')}>
-        <Text style={styles.buttonText}>Upload Photo</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={[styles.button, { backgroundColor: colors.primary }]}
-        onPress={() => router.push('/(tabs)/brands')}>
-        <Text style={styles.buttonText}>Browse Brands</Text>
-      </TouchableOpacity>
-    </View>
+      
+</View>
   );
 }

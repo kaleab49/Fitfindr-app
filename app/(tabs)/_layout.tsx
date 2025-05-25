@@ -30,8 +30,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
-        }}
-      />
+        }} />
       <Tabs.Screen
         name="search"
         options={{
@@ -39,8 +38,15 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search" size={size} color={color} />
           ),
-        }}
-      />
+        }} />
+      <Tabs.Screen
+        name="upload"
+        options={{
+          title: 'Upload',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="camera" size={size} color={color} />
+          ),
+        }} />
       <Tabs.Screen
         name="profile"
         options={{
@@ -48,8 +54,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),
-        }}
-      />
+        }} />
     </Tabs>
   );
 }
@@ -59,3 +64,4 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
 });
+

@@ -1,15 +1,15 @@
 export const colors = {
   // Primary Theme Color
-  primary: '#505F4E', // Deep Green
+  primary: '#000000', // Black for buttons
 
   // Accent Colors
-  accent1: '#E8DEC5', // Darker Cream for better contrast
-  accent2: '#D9D9D9', // Light Gray
-  accent3: '#8BA89D', // Sage Green
+  accent1: '#9C27B0', // Purple for switches/highlights
+  accent2: '#E1D5C9', // App background
+  accent3: '#000000', // Black for text
 
   // Text Colors
-  textLight: '#FFFFFF', // White
-  textDark: '#333333', // Charcoal
+  textLight: '#000000', // Black
+  textDark: '#000000', // Black
 
   // Alert Colors
   error: '#E57373', // Soft Red
@@ -17,19 +17,19 @@ export const colors = {
 
   // Theme-specific colors
   light: {
-    background: '#FFFFFF',
-    surface: '#F5F5F5',
-    text: '#333333',
-    border: '#8BA89D',
-    tabIcon: '#505F4E',
-    tabIconSelected: '#505F4E',
+    background: '#E1D5C9', // New background
+    surface: '#E1D5C9',
+    text: '#000000', // Black text
+    border: '#9C27B0', // Purple for highlights
+    tabIcon: '#000000', // Black (inactive)
+    tabIconSelected: '#9C27B0', // Purple (active)
   },
   dark: {
-    background: '#333333',
-    surface: '#505F4E',
-    text: '#FFFFFF',
-    border: '#8BA89D',
-    tabIcon: '#8BA89D',
-    tabIconSelected: '#F2E8CF',
+    background: '#E1D5C9', // New background
+    surface: '#E1D5C9',
+    text: '#000000', // Black text
+    border: '#9C27B0', // Purple for highlights
+    tabIcon: '#000000', // Black (inactive)
+    tabIconSelected: '#9C27B0', // Purple (active)
   }
 }; 
