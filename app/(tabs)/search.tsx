@@ -81,6 +81,7 @@ export default function SearchScreen() {
       justifyContent: 'space-between',
       gap: 10,
       marginBottom: 20,
+      
     },
     categoryCard: {
       backgroundColor: colors.primary,
@@ -98,7 +99,7 @@ export default function SearchScreen() {
       elevation: 5,
     },
     categoryText: {
-      color: colors.textLight,
+      color: '#FFFFFF',
       fontSize: 16,
       fontWeight: '500',
     },

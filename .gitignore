@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules/
-
+image.png
 # Expo
 .expo/
 dist/

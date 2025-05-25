@@ -157,7 +157,7 @@ export default function SignUpScreen() {
               onPress={handleSignUp}
               disabled={isLoading}
             >
-              <Text style={styles.signUpButtonText}>
+              <Text style={[styles.signUpButtonText, { color: '#FFFFFF' }]}>
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </Text>
             </TouchableOpacity>

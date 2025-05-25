@@ -1,12 +1,30 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import ThemeToggle from '../components/ThemeToggle';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
 export default function TabLayout() {
   const { isDarkMode, colors } = useTheme();
+
+  const HeaderIcons = () => (
+    <View style={styles.headerButtons}>
+      <TouchableOpacity style={styles.headerButton}>
+        <Ionicons
+          name="notifications-outline"
+          size={24}
+          color={isDarkMode ? colors.textLight : colors.textDark}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.headerButton}>
+        <Ionicons
+          name="settings-outline"
+          size={24}
+          color={isDarkMode ? colors.textLight : colors.textDark}
+        />
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <Tabs
@@ -16,11 +34,12 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: isDarkMode ? colors.dark.background : colors.light.background,
         },
-        headerRight: () => <ThemeToggle />,
         headerStyle: {
           backgroundColor: isDarkMode ? colors.dark.surface : colors.light.surface,
         },
         headerTintColor: isDarkMode ? colors.textLight : colors.textDark,
+        tabBarShowLabel: false,
+        headerRight: () => <HeaderIcons />,
       }}
     >
       <Tabs.Screen
@@ -60,8 +79,12 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  headerButton: {
+  headerButtons: {
+    flexDirection: 'row',
     marginRight: 15,
+  },
+  headerButton: {
+    marginLeft: 15,
   },
 });
 

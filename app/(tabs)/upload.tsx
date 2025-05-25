@@ -66,7 +66,7 @@ export default function UploadScreen() {
       marginBottom: 16,
     },
     buttonText: {
-      color: isDarkMode ? colors.textLight : colors.textDark,
+      color: '#FFFFFF',
       textAlign: 'center',
       fontSize: 16,
       fontWeight: 'bold',

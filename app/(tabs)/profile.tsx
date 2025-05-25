@@ -272,15 +272,15 @@ export default function ProfileScreen() {
             style={[styles.imageButton, { backgroundColor: colors.primary }]}
             onPress={takePhoto}
           >
-            <Ionicons name="camera" size={20} color={colors.textLight} />
-            <Text style={[styles.imageButtonText, { color: colors.textLight }]}>Take Photo</Text>
+            <Ionicons name="camera" size={20} color="#FFFFFF" />
+            <Text style={[styles.imageButtonText, { color: '#FFFFFF' }]}>Take Photo</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.imageButton, { backgroundColor: colors.primary }]}
             onPress={pickImage}
           >
-            <Ionicons name="images" size={20} color={colors.textLight} />
-            <Text style={[styles.imageButtonText, { color: colors.textLight }]}>Choose Photo</Text>
+            <Ionicons name="images" size={20} color="#FFFFFF" />
+            <Text style={[styles.imageButtonText, { color: '#FFFFFF' }]}>Choose Photo</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -366,10 +366,8 @@ export default function ProfileScreen() {
                 styles.radioButtonText,
                 { 
                   color: bodyData.gender === gender 
-                    ? colors.textLight 
-                    : isDarkMode 
-                      ? colors.textLight 
-                      : colors.textDark 
+                    ? '#FFFFFF' 
+                    : colors.textDark 
                 }
               ]}>
                 {gender.charAt(0).toUpperCase() + gender.slice(1)}
@@ -574,10 +572,8 @@ export default function ProfileScreen() {
                 styles.radioButtonText,
                 { 
                   color: bodyData.preferredFit === value 
-                    ? colors.textLight 
-                    : isDarkMode 
-                      ? colors.textLight 
-                      : colors.textDark 
+                    ? '#FFFFFF' 
+                    : colors.textDark 
                 }
               ]}>
                 {label}
@@ -591,7 +587,7 @@ export default function ProfileScreen() {
         style={[styles.saveButton, { backgroundColor: colors.primary }]}
         onPress={handleSave}
       >
-        <Text style={styles.saveButtonText}>Save Profile</Text>
+        <Text style={[styles.saveButtonText, { color: '#FFFFFF' }]}>Save Profile</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -617,7 +613,7 @@ export default function ProfileScreen() {
           style={[styles.editButton, { backgroundColor: colors.primary }]}
           onPress={() => setIsEditing(true)}
         >
-          <Ionicons name="pencil" size={20} color={colors.textLight} />
+          <Ionicons name="pencil" size={20} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
