@@ -73,12 +73,10 @@ export default function TabOneScreen() {
       fontWeight: 'bold',
     },
     image: {
-      width: window.innerWidth * 0.8,
-      height: window.innerHeight * 0.8,
+      width: window.innerWidth * 1.15,
+      height: window.innerHeight * 0.9,
       marginTop: 24,
       resizeMode: 'contain',
-      
-     
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.15,
