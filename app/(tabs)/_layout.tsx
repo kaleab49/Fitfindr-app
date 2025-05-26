@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { Tabs, router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
@@ -9,15 +9,15 @@ export default function TabLayout() {
 
   const HeaderIcons = () => (
     <View style={styles.headerButtons}>
-      <TouchableOpacity style={styles.headerButton}>
-        <Ionicons
+      <TouchableOpacity style={styles.headerButton} onPress={() => router.push("../../screens/notifications")}>
+        <Ionicons 
           name="notifications-outline"
           size={24}
           color={isDarkMode ? colors.textLight : colors.textDark}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.headerButton}>
-        <Ionicons
+      <TouchableOpacity style={styles.headerButton} onPress={() => router.push("../../screens/settings")}>
+        <Ionicons 
           name="settings-outline"
           size={24}
           color={isDarkMode ? colors.textLight : colors.textDark}
@@ -39,6 +39,7 @@ export default function TabLayout() {
         },
         headerTintColor: isDarkMode ? colors.textLight : colors.textDark,
         tabBarShowLabel: false,
+        headerShown: true,
         headerRight: () => <HeaderIcons />,
       }}
     >
@@ -46,32 +47,32 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home-outline" size={24} color={color} />
           ),
         }} />
       <Tabs.Screen
         name="search"
         options={{
           title: 'Search',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="search-outline" size={24} color={color} />
           ),
         }} />
       <Tabs.Screen
         name="upload"
         options={{
           title: 'Upload',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="camera" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="camera-outline" size={24} color={color} />
           ),
         }} />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={24} color={color} />
           ),
         }} />
     </Tabs>

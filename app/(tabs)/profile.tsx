@@ -726,7 +726,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
     marginTop: 20,
     marginBottom: 15,
   },
@@ -736,13 +736,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
-    fontWeight: '500',
+    fontFamily: 'Sora-SemiBold',
   },
   input: {
     height: 50,
     borderRadius: 8,
     paddingHorizontal: 15,
     fontSize: 16,
+    fontFamily: 'Sora-Regular',
   },
   radioGroup: {
     flexDirection: 'row',
@@ -763,7 +764,7 @@ const styles = StyleSheet.create({
   },
   radioButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'Sora-SemiBold',
   },
   saveButton: {
     height: 50,
@@ -776,7 +777,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-SemiBold',
   },
   profileView: {
     flex: 1,
@@ -817,11 +818,12 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
     marginBottom: 5,
   },
   statLabel: {
     fontSize: 14,
+    fontFamily: 'Sora-Regular',
   },
   detailsContainer: {
     backgroundColor: '#F5F5F5',
@@ -831,6 +833,7 @@ const styles = StyleSheet.create({
   detailLabel: {
     fontSize: 16,
     marginBottom: 10,
+    fontFamily: 'Sora-Regular',
   },
   profileImage: {
     width: 120,
@@ -874,7 +877,7 @@ const styles = StyleSheet.create({
   },
   imageButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'Sora-SemiBold',
   },
   loadingContainer: {
     flex: 1,
@@ -883,6 +886,6 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
   },
 }); 

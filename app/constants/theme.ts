@@ -41,32 +41,32 @@ export const theme = {
   typography: {
     h1: {
       fontSize: 32,
-      fontFamily: 'Montserrat_700Bold',
+      fontFamily: 'Sora-Bold',
       letterSpacing: 0.5,
     },
     h2: {
       fontSize: 24,
-      fontFamily: 'Montserrat_700Bold',
+      fontFamily: 'Sora-Bold',
       letterSpacing: 0.3,
     },
     h3: {
       fontSize: 20,
-      fontFamily: 'Montserrat_700Bold',
+      fontFamily: 'Sora-Bold',
       letterSpacing: 0.2,
     },
     body: {
       fontSize: 16,
-      fontFamily: 'Inter_400Regular',
+      fontFamily: 'Sora-Regular',
       letterSpacing: 0.1,
     },
     caption: {
       fontSize: 14,
-      fontFamily: 'Lato_400Regular',
+      fontFamily: 'Sora-Regular',
       letterSpacing: 0.1,
     },
     accent: {
       fontSize: 16,
-      fontFamily: 'Lato_700Bold',
+      fontFamily: 'Sora-SemiBold',
       letterSpacing: 0.1,
     }
   },

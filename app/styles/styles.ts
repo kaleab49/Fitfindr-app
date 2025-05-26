@@ -1,16 +1,7 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
+import { StyleSheet } from 'react-native';
 
-export default function TabOneScreen() {
-  const { isDarkMode, theme, colors } = useTheme();
-
-  const handleProfileSetup = () => {
-    router.push('/(tabs)/profile');
-  };
-
-  const styles = StyleSheet.create({
+export const styles = (isDarkMode: boolean, theme: any, colors: any, window: any) =>
+  StyleSheet.create({
     container: {
       flex: 1,
     },
@@ -88,33 +79,3 @@ export default function TabOneScreen() {
       flex: 1,
     },
   });
-
-  return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={[
-          theme.surface,
-          theme.background,
-        ]}
-        style={styles.gradient}
-      >
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.content}>
-            <Text style={styles.title}>
-              Welcome to FitFindr!
-            </Text>
-            <Image
-              source={require('../../assets/sizegirl.png')}
-              style={styles.image}
-              accessibilityLabel="Size Girl Illustration"
-            />
-          </View>
-        </ScrollView>
-      </LinearGradient>
-
-      
-
-      
-</View>
-  );
-}

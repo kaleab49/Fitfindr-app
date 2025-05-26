@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
     marginTop: 10,
   },
   formContainer: {
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     fontSize: 16,
+    fontFamily: 'Sora-Regular',
   },
   signUpButton: {
     height: 50,
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
   signUpButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-SemiBold',
   },
   loginButton: {
     marginTop: 20,
@@ -235,5 +236,6 @@ const styles = StyleSheet.create({
   },
   loginText: {
     fontSize: 14,
+    fontFamily: 'Sora-Regular',
   },
 }); 
