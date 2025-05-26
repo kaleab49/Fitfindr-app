@@ -1,26 +1,26 @@
 export const theme = {
   light: {
-    background: '#E1D5C9',
-    surface: '#E1D5C9',
-    text: '#000000',
-    primary: '#000000', // Black for buttons
-    secondary: '#9C27B0', // Purple for switches/highlights
-    accent: '#9C27B0', // Purple for switches/highlights
-    border: '#9C27B0', // Purple
-    card: '#E1D5C9',
+    background: '#F5EEE6',
+    surface: '#E9E1D3',
+    text: '#181818',
+    primary: '#232323',
+    secondary: '#D4A857',
+    accent: '#D4A857',
+    border: '#D4A857',
+    card: '#E9E1D3',
     error: '#E57373',
     success: '#81C784',
     buttonText: '#FFFFFF',
   },
   dark: {
-    background: '#E1D5C9',
-    surface: '#E1D5C9',
-    text: '#000000',
-    primary: '#000000', // Black for buttons
-    secondary: '#9C27B0', // Purple for switches/highlights
-    accent: '#9C27B0', // Purple for switches/highlights
-    border: '#9C27B0', // Purple
-    card: '#E1D5C9',
+    background: '#F5EEE6',
+    surface: '#E9E1D3',
+    text: '#181818',
+    primary: '#232323',
+    secondary: '#D4A857',
+    accent: '#D4A857',
+    border: '#D4A857',
+    card: '#E9E1D3',
     error: '#E57373',
     success: '#81C784',
     buttonText: '#FFFFFF',
@@ -41,32 +41,32 @@ export const theme = {
   typography: {
     h1: {
       fontSize: 32,
-      fontFamily: 'Montserrat_700Bold',
+      fontFamily: 'Sora-Bold',
       letterSpacing: 0.5,
     },
     h2: {
       fontSize: 24,
-      fontFamily: 'Montserrat_700Bold',
+      fontFamily: 'Sora-Bold',
       letterSpacing: 0.3,
     },
     h3: {
       fontSize: 20,
-      fontFamily: 'Montserrat_700Bold',
+      fontFamily: 'Sora-Bold',
       letterSpacing: 0.2,
     },
     body: {
       fontSize: 16,
-      fontFamily: 'Inter_400Regular',
+      fontFamily: 'Sora-Regular',
       letterSpacing: 0.1,
     },
     caption: {
       fontSize: 14,
-      fontFamily: 'Lato_400Regular',
+      fontFamily: 'Sora-Regular',
       letterSpacing: 0.1,
     },
     accent: {
       fontSize: 16,
-      fontFamily: 'Lato_700Bold',
+      fontFamily: 'Sora-SemiBold',
       letterSpacing: 0.1,
     }
   },

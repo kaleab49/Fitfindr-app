@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { View } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { useAppFonts } from './constants/fonts';
 
 export const unstable_settings = {
   initialRouteName: 'auth/sign-in',
@@ -9,8 +10,9 @@ export const unstable_settings = {
 
 function RootLayoutNav() {
   const { user, loading } = useAuth();
+  const fontsLoaded = useAppFonts();
 
-  if (loading) {
+  if (loading || !fontsLoaded) {
     return <View style={{ flex: 1 }} />;
   }
 
@@ -43,10 +45,10 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <ThemeProvider>
         <RootLayoutNav />
-      </AuthProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

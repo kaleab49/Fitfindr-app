@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
     color: '#333',
     textAlign: 'center',
     marginBottom: 20,
@@ -167,10 +167,11 @@ const styles = StyleSheet.create({
   toggleText: {
     color: '#666',
     fontSize: 16,
+    fontFamily: 'Sora-Regular',
   },
   activeToggleText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'Sora-SemiBold',
   },
   input: {
     backgroundColor: '#f8f8f8',
@@ -178,6 +179,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
+    fontFamily: 'Sora-Regular',
   },
   submitButton: {
     backgroundColor: '#007AFF',
@@ -192,11 +194,12 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-SemiBold',
   },
   errorText: {
     color: 'red',
     textAlign: 'center',
     marginTop: 10,
+    fontFamily: 'Sora-Regular',
   },
 }); 

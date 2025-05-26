@@ -272,15 +272,15 @@ export default function ProfileScreen() {
             style={[styles.imageButton, { backgroundColor: colors.primary }]}
             onPress={takePhoto}
           >
-            <Ionicons name="camera" size={20} color={colors.textLight} />
-            <Text style={[styles.imageButtonText, { color: colors.textLight }]}>Take Photo</Text>
+            <Ionicons name="camera" size={20} color="#FFFFFF" />
+            <Text style={[styles.imageButtonText, { color: '#FFFFFF' }]}>Take Photo</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.imageButton, { backgroundColor: colors.primary }]}
             onPress={pickImage}
           >
-            <Ionicons name="images" size={20} color={colors.textLight} />
-            <Text style={[styles.imageButtonText, { color: colors.textLight }]}>Choose Photo</Text>
+            <Ionicons name="images" size={20} color="#FFFFFF" />
+            <Text style={[styles.imageButtonText, { color: '#FFFFFF' }]}>Choose Photo</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -366,10 +366,8 @@ export default function ProfileScreen() {
                 styles.radioButtonText,
                 { 
                   color: bodyData.gender === gender 
-                    ? colors.textLight 
-                    : isDarkMode 
-                      ? colors.textLight 
-                      : colors.textDark 
+                    ? '#FFFFFF' 
+                    : colors.textDark 
                 }
               ]}>
                 {gender.charAt(0).toUpperCase() + gender.slice(1)}
@@ -574,10 +572,8 @@ export default function ProfileScreen() {
                 styles.radioButtonText,
                 { 
                   color: bodyData.preferredFit === value 
-                    ? colors.textLight 
-                    : isDarkMode 
-                      ? colors.textLight 
-                      : colors.textDark 
+                    ? '#FFFFFF' 
+                    : colors.textDark 
                 }
               ]}>
                 {label}
@@ -591,7 +587,7 @@ export default function ProfileScreen() {
         style={[styles.saveButton, { backgroundColor: colors.primary }]}
         onPress={handleSave}
       >
-        <Text style={styles.saveButtonText}>Save Profile</Text>
+        <Text style={[styles.saveButtonText, { color: '#FFFFFF' }]}>Save Profile</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -617,7 +613,7 @@ export default function ProfileScreen() {
           style={[styles.editButton, { backgroundColor: colors.primary }]}
           onPress={() => setIsEditing(true)}
         >
-          <Ionicons name="pencil" size={20} color={colors.textLight} />
+          <Ionicons name="pencil" size={20} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
@@ -730,7 +726,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
     marginTop: 20,
     marginBottom: 15,
   },
@@ -740,13 +736,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
-    fontWeight: '500',
+    fontFamily: 'Sora-SemiBold',
   },
   input: {
     height: 50,
     borderRadius: 8,
     paddingHorizontal: 15,
     fontSize: 16,
+    fontFamily: 'Sora-Regular',
   },
   radioGroup: {
     flexDirection: 'row',
@@ -767,7 +764,7 @@ const styles = StyleSheet.create({
   },
   radioButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'Sora-SemiBold',
   },
   saveButton: {
     height: 50,
@@ -780,7 +777,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-SemiBold',
   },
   profileView: {
     flex: 1,
@@ -821,11 +818,12 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
     marginBottom: 5,
   },
   statLabel: {
     fontSize: 14,
+    fontFamily: 'Sora-Regular',
   },
   detailsContainer: {
     backgroundColor: '#F5F5F5',
@@ -835,6 +833,7 @@ const styles = StyleSheet.create({
   detailLabel: {
     fontSize: 16,
     marginBottom: 10,
+    fontFamily: 'Sora-Regular',
   },
   profileImage: {
     width: 120,
@@ -878,7 +877,7 @@ const styles = StyleSheet.create({
   },
   imageButtonText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'Sora-SemiBold',
   },
   loadingContainer: {
     flex: 1,
@@ -887,6 +886,6 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Sora-Bold',
   },
 }); 

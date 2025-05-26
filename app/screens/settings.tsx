@@ -5,7 +5,7 @@ import { supabase } from '../../lib/supabase';
 import { useTheme } from '../context/ThemeContext';
 
 export default function Settings() {
-  const { isDarkMode, colors, toggleTheme } = useTheme();
+  const { isDarkMode, colors } = useTheme();
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
@@ -25,17 +25,6 @@ export default function Settings() {
     <View style={[styles.container, { backgroundColor: isDarkMode ? colors.dark.background : colors.light.background }]}>
       <Text style={[styles.header, { color: isDarkMode ? colors.textLight : colors.textDark }]}>Settings</Text>
 
-      {/* Dark Mode Toggle */}
-      <View style={styles.settingItem}>
-        <Text style={[styles.settingText, { color: isDarkMode ? colors.textLight : colors.textDark }]}>Dark Mode</Text>
-        <Switch 
-          value={isDarkMode} 
-          onValueChange={toggleTheme}
-          trackColor={{ false: colors.accent3, true: colors.primary }}
-          thumbColor={isDarkMode ? colors.accent1 : colors.accent2}
-        />
-      </View>
-
       {/* Notifications Toggle */}
       <View style={styles.settingItem}>
         <Text style={[styles.settingText, { color: isDarkMode ? colors.textLight : colors.textDark }]}>Enable Notifications</Text>
@@ -52,7 +41,7 @@ export default function Settings() {
         style={[styles.logoutButton, { backgroundColor: colors.accent3 }]}
         onPress={handleLogout}
       >
-        <Text style={styles.logoutButtonText}>Logout</Text>
+        <Text style={[styles.logoutButtonText, { color: '#FFFFFF' }]}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
