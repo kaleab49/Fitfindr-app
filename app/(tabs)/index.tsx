@@ -34,6 +34,7 @@ export default function TabOneScreen() {
       color: isDarkMode ? colors.textLight : colors.textDark,
       justifyContent: 'center',
       alignItems: 'center',
+      fontFamily: 'playsans',
     },
     card: {
       backgroundColor: isDarkMode ? colors.dark.surface : colors.accent1,

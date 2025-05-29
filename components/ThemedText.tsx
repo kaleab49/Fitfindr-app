@@ -42,21 +42,21 @@ const styles = StyleSheet.create({
   defaultSemiBold: {
     fontSize: 16,
     lineHeight: 24,
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans',
   },
   title: {
     fontSize: 32,
-    fontFamily: 'Sora-Bold',
+    fontFamily: 'playsans',
     lineHeight: 32,
   },
   subtitle: {
     fontSize: 20,
-    fontFamily: 'Sora-Bold',
+    fontFamily: 'playsans',
   },
   link: {
     lineHeight: 30,
     fontSize: 16,
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans',
     color: '#0a7ea4',
   },
 });

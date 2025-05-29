@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: 'Sora-Bold',
+    fontFamily: 'playsans',
     color: '#333',
     textAlign: 'center',
     marginBottom: 20,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   activeToggleText: {
     color: 'white',
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans',
   },
   input: {
     backgroundColor: '#f8f8f8',
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans',
   },
   errorText: {
     color: 'red',

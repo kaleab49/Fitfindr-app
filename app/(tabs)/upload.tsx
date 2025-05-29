@@ -57,6 +57,7 @@ export default function UploadScreen() {
       fontWeight: 'bold',
       marginBottom: 20,
       color: isDarkMode ? colors.textLight : colors.textDark,
+      fontFamily: 'playsans',
     },
     button: {
       backgroundColor: colors.primary,
@@ -70,6 +71,7 @@ export default function UploadScreen() {
       textAlign: 'center',
       fontSize: 16,
       fontWeight: 'bold',
+      fontFamily: 'playsans',
     },
     imageContainer: {
       flex: 1,
@@ -87,6 +89,7 @@ export default function UploadScreen() {
       color: isDarkMode ? colors.textLight : colors.textDark,
       textAlign: 'center',
       marginBottom: 20,
+      fontFamily: 'playsans',
     },
   });
 

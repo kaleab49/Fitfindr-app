@@ -1,13 +1,13 @@
-import { useSignUp } from '@clerk/clerk-expo';
+import { useOAuth, useSignUp } from '@clerk/clerk-expo';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { theme } from '../constants/theme';
 import { useAuth } from '../context/AuthContext';
@@ -18,6 +18,8 @@ export default function SignUpScreen() {
   const colors = isDarkMode ? theme.dark : theme.light;
   const { signUp: legacySignUp, error, loading } = useAuth();
   const { signUp, isLoaded } = useSignUp();
+  const { startOAuthFlow: startGoogleOAuth } = useOAuth({ strategy: 'oauth_google' });
+  const { startOAuthFlow: startAppleOAuth } = useOAuth({ strategy: 'oauth_apple' });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -47,9 +49,12 @@ export default function SignUpScreen() {
   };
 
   const handleSocialSignUp = async (provider: 'oauth_google' | 'oauth_apple') => {
-    if (!signUp || !isLoaded) return;
     try {
-      await signUp.authenticateWithRedirect({ strategy: provider });
+      if (provider === 'oauth_google') {
+        await startGoogleOAuth();
+      } else if (provider === 'oauth_apple') {
+        await startAppleOAuth();
+      }
     } catch (err: any) {
       setValidationError('Social sign-up failed');
     }
@@ -185,4 +190,4 @@ export default function SignUpScreen() {
       </View>
     </View>
   );
-} 
+}

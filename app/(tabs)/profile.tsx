@@ -726,7 +726,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontFamily: 'Sora-Bold',
+    fontFamily: 'playsans',
     marginTop: 20,
     marginBottom: 15,
   },
@@ -736,7 +736,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans',
   },
   input: {
     height: 50,
@@ -764,7 +764,7 @@ const styles = StyleSheet.create({
   },
   radioButtonText: {
     fontSize: 14,
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans'
   },
   saveButton: {
     height: 50,
@@ -777,7 +777,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans',
   },
   profileView: {
     flex: 1,
@@ -818,7 +818,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontFamily: 'Sora-Bold',
+    fontFamily: 'playsans',
     marginBottom: 5,
   },
   statLabel: {
@@ -877,7 +877,7 @@ const styles = StyleSheet.create({
   },
   imageButtonText: {
     fontSize: 14,
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans',
   },
   loadingContainer: {
     flex: 1,
@@ -886,6 +886,6 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 18,
-    fontFamily: 'Sora-Bold',
+    fontFamily: 'playsans',
   },
 }); 

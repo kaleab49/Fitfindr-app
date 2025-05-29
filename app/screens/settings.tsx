@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
+    fontFamily: 'playsans',
   },
   settingItem: {
     flexDirection: 'row',
@@ -68,6 +70,7 @@ const styles = StyleSheet.create({
   },
   settingText: {
     fontSize: 18,
+    fontFamily: 'playsans',
   },
   logoutButton: {
     marginTop: 30,
@@ -79,5 +82,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'playsans',
   },
 });

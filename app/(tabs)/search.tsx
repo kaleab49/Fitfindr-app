@@ -65,6 +65,7 @@ export default function SearchScreen() {
       marginLeft: 10,
       fontSize: 16,
       color: isDarkMode ? colors.textLight : colors.textDark,
+      fontFamily: 'playsans',
     },
     content: {
       padding: 15,
@@ -74,6 +75,7 @@ export default function SearchScreen() {
       fontWeight: '600',
       marginBottom: 15,
       color: isDarkMode ? colors.textLight : colors.textDark,
+      fontFamily: 'playsans',
     },
     categoriesContainer: {
       flexDirection: 'row',
@@ -102,6 +104,7 @@ export default function SearchScreen() {
       color: '#FFFFFF',
       fontSize: 16,
       fontWeight: '500',
+      fontFamily: 'playsans',
     },
     brandCard: {
       backgroundColor: isDarkMode ? colors.dark.surface : colors.accent1,
@@ -122,10 +125,12 @@ export default function SearchScreen() {
       fontWeight: '600',
       color: isDarkMode ? colors.textLight : colors.textDark,
       marginBottom: 5,
+      fontFamily: 'playsans',
     },
     brandCategory: {
       fontSize: 14,
       color: colors.accent3,
+      fontFamily: 'playsans',
     },
   });
 

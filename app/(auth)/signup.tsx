@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontFamily: 'Sora-Bold',
+    fontFamily: 'playsans',
     marginTop: 10,
   },
   formContainer: {
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   signUpButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontFamily: 'Sora-SemiBold',
+    fontFamily: 'playsans'
   },
   loginButton: {
     marginTop: 20,

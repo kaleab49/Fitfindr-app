@@ -4,8 +4,7 @@ export const useAppFonts = () => {
   const [fontsLoaded] = useFonts({
     'Sora-Regular': require('../../assets/fonts/Sora-Regular.ttf'),
     'Sora-Medium': require('../../assets/fonts/Sora-Medium.ttf'),
-    'Sora-SemiBold': require('../../assets/fonts/Sora-SemiBold.ttf'),
-    'Sora-Bold': require('../../assets/fonts/Sora-Bold.ttf'),
+    'playsans': require('../../assets/fonts/playsans.ttf'),
   });
 
   return fontsLoaded;

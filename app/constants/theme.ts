@@ -41,17 +41,17 @@ export const theme = {
   typography: {
     h1: {
       fontSize: 32,
-      fontFamily: 'Sora-Bold',
+      fontFamily: 'playsans',
       letterSpacing: 0.5,
     },
     h2: {
       fontSize: 24,
-      fontFamily: 'Sora-Bold',
+      fontFamily: 'playsans',
       letterSpacing: 0.3,
     },
     h3: {
       fontSize: 20,
-      fontFamily: 'Sora-Bold',
+      fontFamily: 'playsans',
       letterSpacing: 0.2,
     },
     body: {
@@ -66,7 +66,7 @@ export const theme = {
     },
     accent: {
       fontSize: 16,
-      fontFamily: 'Sora-SemiBold',
+      fontFamily: 'playsans',
       letterSpacing: 0.1,
     }
   },

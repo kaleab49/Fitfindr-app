@@ -11,6 +11,7 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@clerk/clerk-expo": "^2.11.8",
     "@expo-google-fonts/inter": "^0.3.0",
     "@expo-google-fonts/lato": "^0.3.0",
     "@expo-google-fonts/montserrat": "^0.3.0",
