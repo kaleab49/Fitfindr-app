@@ -39,6 +39,7 @@ export default function TabLayout() {
             backgroundColor: isDarkMode ? colors.dark.background : colors.light.background,
           },
           headerShown: false,
+          tabBarShowLabel: false,
         }}
       >
         <Tabs.Screen
