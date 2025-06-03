@@ -1,54 +1,43 @@
-<<<<<<< HEAD
-# Fitfindr-app
-=======
-# Welcome to your Expo app 👋
+# 👕 FitFindr
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**FitFindr** is a mobile app that helps users find their perfect size in clothing, shoes, and sports equipment across various brands — so no more size guessing or return headaches! Whether you're shopping online or in-store, FitFindr makes sure you always get the right fit.
 
-## Get started
+---
 
-1. Install dependencies
+## 📱 Built With
 
-   ```bash
-   npm install
-   ```
+- **React Native** (using Expo)
+- **JavaScript/TypeScript** (your choice)
+- **Tailwind CSS** (for styling with `tailwind-react-native-classnames`)
+- **TensorFlow.js or any AI model** (for image-based size prediction - coming soon!)
+- **Firebase / Supabase / Express API** (optional backends - plug in your own)
+- **Node.js** (for backend or tooling if needed)
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🧠 Key Features
 
-In the output, you'll find options to open the app in a
+- 📏 **Smart Size Recommender:** Finds your perfect fit based on your height, weight, and body profile.
+- 📸 **"Snap & Upload" Feature:** Take a photo of your clothing or gear, and let the app suggest the best size (uses AI/ML – planned).
+- 🛍️ **Brand-Based Size Matching:** Adjusts sizing recommendations based on brand-specific data.
+- 🌙 **Dark & Light Mode:** Smooth UI with theme toggle — avoids cream colors for better readability.
+- 📊 **Profile Customization:** Users can enter or update their body metrics anytime.
+- 💬 **Optional Social Feedback (Future):** Let friends rate how your outfit fits.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🚀 Getting Started
 
-## Get a fresh project
+### Prerequisites
 
-When you're ready, run:
+- Node.js (v16+)
+- Expo CLI (`npm install -g expo-cli`)
+- Git
+
+### Installation
 
 ```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
->>>>>>> acb9781 (Initial commit)
+git clone https://github.com/yourusername/fitfindr.git
+cd fitfindr
+npm install
+expo start
