@@ -37,7 +37,7 @@
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/fitfindr.git
-cd fitfindr
+git clone https://github.com/kaleab49/Fitfindr-app.git
+cd Fitfindr-app
 npm install
 expo start
