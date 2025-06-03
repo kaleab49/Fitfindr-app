@@ -3,12 +3,37 @@ import React, { useState } from 'react';
 import { Alert, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
 import { useTheme } from '../context/ThemeContext';
-
+import { useNavigation } from '@react-navigation/native';
+import { useLayoutEffect } from 'react';
+import { theme } from '../constants/theme';
 export default function Settings() {
   const { isDarkMode, colors } = useTheme();
   const router = useRouter();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const navigation = useNavigation();
+  
+    useLayoutEffect(() => {
+      navigation.setOptions({ 
+            headerShown: true,
+            headerBackVisible: true,
+            headerTitle: "Settings",
+            headerStyle: {
+              backgroundColor: theme.background,
+            },
+            headerTintColor: isDarkMode ? colors.textLight : colors.textDark,
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 20,
+              color: isDarkMode ? colors.textLight : colors.textDark,
+            },
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerBackTitleVisible: false,
+            headerBackImage: () => (
+              <Text style={{ color: isDarkMode ? colors.textLight : colors.textDark }}>Back</Text>
+            ),  
+          });
+        }, [navigation,]);
   const toggleNotifications = () => setNotificationsEnabled((prev) => !prev);
 
   const handleLogout = async () => {
