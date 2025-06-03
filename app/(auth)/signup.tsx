@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useNavigation, useRouter } from 'expo-router';
+import React, { useState, useLayoutEffect } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
 import { useTheme } from '../context/ThemeContext';
+
+
 
 export default function SignUpScreen() {
   const { isDarkMode, colors } = useTheme();
@@ -13,7 +15,14 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation();
 
+  // Hide header for this screen
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  },  [navigation]);
   const handleSignUp = async () => {
     if (!email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');

@@ -17,9 +17,6 @@ export default function Settings() {
             headerShown: true,
             headerBackVisible: true,
             headerTitle: "Settings",
-            headerStyle: {
-              backgroundColor: theme.background,
-            },
             headerTintColor: isDarkMode ? colors.textLight : colors.textDark,
             headerTitleStyle: {
               fontWeight: 'bold',

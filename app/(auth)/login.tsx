@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useNavigation } from 'expo-router';
+import React, { useLayoutEffect, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
 import { useTheme } from '../context/ThemeContext';
@@ -12,7 +13,15 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigation = useNavigation();
+  
+  // Hide header for this screen
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }
+  , [navigation]);
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please fill in all fields');
@@ -28,7 +37,7 @@ export default function LoginScreen() {
       if (error) throw error;
       router.replace('/(tabs)');
     } catch (error) {
-      Alert.alert('Error', error.message);
+      Alert.alert('Error', (error as Error).message);
     } finally {
       setIsLoading(false);
     }
