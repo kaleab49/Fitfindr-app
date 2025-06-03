@@ -99,7 +99,7 @@ export default function TabOneScreen() {
         ]}
         style={styles.gradient}
       >
-        <ScrollView style={styles.scrollView}>
+        
           <View style={styles.content}>
             <Text style={styles.title}>
               Welcome to FitFindr!
@@ -110,7 +110,7 @@ export default function TabOneScreen() {
               accessibilityLabel="Size Girl Illustration"
             />
           </View>
-        </ScrollView>
+       
       </LinearGradient>
 
       

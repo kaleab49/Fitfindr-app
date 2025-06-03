@@ -10,7 +10,9 @@ export default function Notifications() {
     <View>
       <Text>Notifications</Text>
       <Text>Coming soon!</Text>
-      {/* You can add more notification-related components here */}
+      <Text style={{fontSize: 16, color: isDarkMode ? colors.textLight : colors.textDark}}> 
+        This feature is under development. Stay tuned for updates!
+        </Text>
     </View>
   );
 }
