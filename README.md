@@ -41,3 +41,9 @@ git clone https://github.com/kaleab49/Fitfindr-app.git
 cd Fitfindr-app
 npm install
 expo start
+```
+
+
+# Note:
+
+ This app is currently in development. We welcome contributions from anyone interested in collaborating! Thanks!
